@@ -1,0 +1,32 @@
+<!--display all the URLs and their shortened forms -->
+<!-- var urlDatabse = require('express-server.js'); -->
+
+<!DOCTYPE html>
+
+<html lang='en'>
+
+<head>
+  <title>TinyApp</title>
+</head>
+
+<body>
+  <ul>
+    <table>
+      <tr>
+        <th>Shortened URL</th>
+        <th>Original URL</th>
+      </tr>
+      <% for (var key in urls) {
+        var value = urls[key]; %>
+        <tr>
+          <td><a href="/urls/<%= key %>"><%= key %></a></td>
+          <td><%= value %></td>
+        </tr>
+      <% } %>
+    </table>
+    <button><a href='/urls/new'>SHORTEN URL</a></button>
+  </ul>
+</body>
+
+
+</html>
