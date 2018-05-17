@@ -21,6 +21,19 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  'userRandomID': {
+    id: 'userRandomID',
+    email: 'user@example.com',
+    password: '12345'
+  },
+  'user2RandomID': {
+    id: 'user2RandomID',
+    email: 'user2@example.com',
+    password: '12345'
+  }
+};
+
 //render silly homepage with path to link generator
 app.get('/', (req, res) => {
   res.render('main');
@@ -37,7 +50,7 @@ app.get('/urls', (req, res) => {
 
 //render link generator page with path to /urls
 app.get('/urls/new', (req, res) => {
-  console.log('LOCALS', res.locals);
+  // console.log('LOCALS', res.locals);
   res.render('urls_new', {
     username: req.cookies['username']
   });
@@ -62,6 +75,29 @@ app.get('/u/:shortURL', (req, res) => {
   res.redirect(longURL);
 });
 
+//register
+app.get('/register', (req, res) => {
+  res.render('register');
+})
+
+//
+app.post('/register', (req, res) => {
+  //if req'd fields are empty
+  if (req.body.email === "" || req.body.password === "") {
+    res.end('400 error, enter valid email and/or password'); //change to status code
+  //if email already in use
+  } else if (isEmailTaken(req.body.email)) {
+    res.end('email already in use');
+  } else {
+    //add user
+    let userID = generateRandomUserID();
+    users[userID] = {id: userID, email: req.body.email, password: req.body.password};
+    //set cookie
+    res.cookie('user_id', users[userID]);
+    //redirect to /urls
+    res.redirect('/urls');
+  };
+});
 
 //adds short url to database
 app.post("/urls", (req, res) => {
@@ -79,7 +115,7 @@ app.post('/urls/:id/delete', (req, res) => {
   res.redirect('/urls');
 });
 
-//currently broekn
+//
 app.post('/urls/:id', (req, res) => {
   // console.log(urlDatabase[req.params.id]);
   urlDatabase[req.params.id] = req.body.longURL;
@@ -104,6 +140,16 @@ app.post('/logout', (req, res) => {
   res.redirect('/urls');
 });
 
+function isEmailTaken (email) {
+  for (let userID in users) {
+    const user = users[userID];
+    if (user.email === email) {
+      return true;
+    }
+  }
+  return false;
+};
+
 //generate random string for short url
 function generateRandomString () {
   var string = "";
@@ -112,6 +158,16 @@ function generateRandomString () {
     string += possible.charAt(Math.floor(Math.random() * possible.length));
   return string;
 };
+
+//generate random id for user
+function generateRandomUserID () {
+  var string = "userID-";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i = 0; i < 10; i++)
+    string += possible.charAt(Math.floor(Math.random() * possible.length));
+  return string;
+};
+
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}!`);
