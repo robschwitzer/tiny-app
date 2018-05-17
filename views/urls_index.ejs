@@ -13,18 +13,26 @@
   <ul>
     <table>
       <tr>
-        <th>Shortened URL</th>
+        <th>New URL</th>
         <th>Original URL</th>
+        <th></th>
+        <th></th>
       </tr>
       <% for (var key in urls) {
         var value = urls[key]; %>
         <tr>
-          <td><a href="/urls/<%= key %>"><%= key %></a></td>
-          <td><%= value %></td>
+          <td>
+            <a href="/u/<%= key %>"><%= key %></a>
+            </td>  <!-- shortened url -->
+          <td><%= value %></td>  <!-- actual url -->
+          <td><form method="GET" action="/urls/<%= key %>"><button>EDIT</button></form></td>
+          <td><form method="POST" action="/urls/<%= key %>/delete"><button>DELETE</button></form></td>
         </tr>
       <% } %>
     </table>
-    <button><a href='/urls/new'>SHORTEN URL</a></button>
+    <br>
+    <br>
+    <button><a href='/urls/new'>MAKE ANOTHER URL</a></button>
   </ul>
 </body>
 

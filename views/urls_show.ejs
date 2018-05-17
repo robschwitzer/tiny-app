@@ -8,18 +8,25 @@
 
 </head>
 
-<<body>
+<body>
   <ul>
         <table>
   <tr>
     <th>Shortened URL</th>
     <th>Original URL</th>
+    <th>Edit URL</th>
   </tr>
   <tr>
     <td><%= shortURL %></td>
     <td><%= originalURL %></td>
+    <td><form action="/urls/<%= shortURL %>" method="POST">
+      <input id="" type="text" name="longURL" placeholder="<%= originalURL %>">
+      <input type="submit" value="Update">
+  </form></td>
+
   </tr>
 </table>
+
 <!-- <button><a href = '#'>SHORTEN URL</a></button> -->
   </ul>
 </body>
