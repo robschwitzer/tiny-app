@@ -43,7 +43,7 @@ app.get('/urls/new', (req, res) => {
   });
 });
 
-//currently broken
+//
 app.get('/urls/:id', (req, res) => {
   let urlId = req.params.id;
   let fullURL = urlDatabase[req.params.id];
