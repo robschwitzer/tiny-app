@@ -21,6 +21,7 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+//default users
 const users = {
   'userRandomID': {
     id: 'userRandomID',
@@ -41,9 +42,12 @@ app.get('/', (req, res) => {
 
 //render shortened links for logged in user
 app.get('/urls', (req, res) => {
+  console.log("oh god, not the bees", req.cookies['user_id']);
+  const user = users[req.cookies.user_id];
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies['username']
+    user: user,
+    // username: req.cookies['user_id']
   };
   res.render('urls_index', templateVars);
 });
@@ -51,8 +55,9 @@ app.get('/urls', (req, res) => {
 //render link generator page with path to /urls
 app.get('/urls/new', (req, res) => {
   // console.log('LOCALS', res.locals);
+  const user = users[req.cookies.user_id];
   res.render('urls_new', {
-    username: req.cookies['username']
+    user: req.cookies['user_id']
   });
 });
 
@@ -60,10 +65,11 @@ app.get('/urls/new', (req, res) => {
 app.get('/urls/:id', (req, res) => {
   let urlId = req.params.id;
   let fullURL = urlDatabase[req.params.id];
+  let user = users[req.cookies.user_id];
   let templateVars = {
     shortURL: urlId,
     originalURL: fullURL,
-    username: req.cookies['username']
+    user: user,
   };
   res.render('urls_show', templateVars);
 });
@@ -93,10 +99,17 @@ app.post('/register', (req, res) => {
     let userID = generateRandomUserID();
     users[userID] = {id: userID, email: req.body.email, password: req.body.password};
     //set cookie
-    res.cookie('user_id', users[userID]);
+    res.cookie('user_id', userID);  //'name', value
     //redirect to /urls
     res.redirect('/urls');
   };
+});
+
+//login
+app.get('/login', (req, res) => {
+  let user = req.body.email;
+  res.cookie('user_id', users.userID)
+  res.render('login');
 });
 
 //adds short url to database
@@ -125,21 +138,33 @@ app.post('/urls/:id', (req, res) => {
 
 //
 app.post('/login', (req, res) => {
-  // console.log(req.body.username);
-  const username = req.body.username;
+  // console.log(req.body);
+  var email = req.body.email;
+  var password = req.body.password;
+
+  // FIND USER by email & password
+  for(var userId in users) {
+    var user = users[userId];
+    if(user.email === email && user.password === password) {
+        res.cookie('user_id', user.id);
+        res.redirect('/urls');
+        return;
+    }
+  }
+
+  res.send('User not found', 403);
+  // const user = users[req.cookies.user_id];
+  // const user_id = users.userID.email;
   // es6 sugar... if the var name is the same as the key do below!!!
-  res.cookie('username', username);
-  res.redirect('/urls');
 });
 
-
-//
+//currently broken because of cookies
 app.post('/logout', (req, res) => {
-  const username = req.body.username;
-  res.clearCookie('username');
-  res.redirect('/urls');
+  res.clearCookie('user_id', { path: '/' });
+  res.redirect('/login');
 });
 
+//check to see if email already in use
 function isEmailTaken (email) {
   for (let userID in users) {
     const user = users[userID];
