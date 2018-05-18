@@ -150,9 +150,6 @@ app.post('/login', (req, res) => {
     }
   }
   res.send('User not found', 403);
-  // const user = users[req.cookies.user_id];
-  // const user_id = users.userID.email;
-  // es6 sugar... if the var name is the same as the key do below!!!
 });
 
 //currently broken because of cookies
