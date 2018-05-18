@@ -138,10 +138,8 @@ app.post('/urls/:id', (req, res) => {
 
 //
 app.post('/login', (req, res) => {
-  // console.log(req.body);
   var email = req.body.email;
   var password = req.body.password;
-
   // FIND USER by email & password
   for(var userId in users) {
     var user = users[userId];
@@ -151,7 +149,6 @@ app.post('/login', (req, res) => {
         return;
     }
   }
-
   res.send('User not found', 403);
   // const user = users[req.cookies.user_id];
   // const user_id = users.userID.email;
