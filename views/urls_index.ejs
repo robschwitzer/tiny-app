@@ -7,6 +7,7 @@
 
 <head>
   <title>TinyApp</title>
+  <link rel="stylesheet" type="text/css" href="/reset.css">
 </head>
 
 <body>
@@ -14,8 +15,8 @@
   <ul>
     <table>
       <tr>
-        <th>New URL</th>
-        <th>Original URL</th>
+        <th>TINY URL</th>
+        <th>HUGE URL</th>
         <th></th>
         <th></th>
       </tr>
@@ -28,13 +29,15 @@
           <td><%= value %></td>  <!-- actual url -->
           <td><form method="GET" action="/urls/<%= key %>"><button>EDIT</button></form></td>
           <td><form method="POST" action="/urls/<%= key %>/delete"><button>DELETE</button></form></td>
-          <td><%=urls[key].userID%></td>
         </tr>
       <% } %>
     </table>
     <br>
-    <br>
-    <button><a href='/urls/new'>MAKE ANOTHER URL</a></button>
+    <% if (key) { %>
+      <button><a href='/urls/new'>TINY-FY ANOTHER URL</a></button>
+    <% } else { %>
+      <button><a href='/urls/new'>TINY-FY URL</a></button>
+      <% } %>
   </ul>
 </body>
 
