@@ -20,7 +20,7 @@
         <th></th>
       </tr>
       <% for (var key in urls) {
-        var value = urls[key]; %>
+        var value = urls[key].url; %>
         <tr>
           <td>
             <a href="/u/<%= key %>"><%= key %></a>
@@ -28,6 +28,7 @@
           <td><%= value %></td>  <!-- actual url -->
           <td><form method="GET" action="/urls/<%= key %>"><button>EDIT</button></form></td>
           <td><form method="POST" action="/urls/<%= key %>/delete"><button>DELETE</button></form></td>
+          <td><%=urls[key].userID%></td>
         </tr>
       <% } %>
     </table>
